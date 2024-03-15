@@ -13,6 +13,6 @@
 #include <stddef.h>
 
 // Block until writing is complete or failure
-int8_t block_write(int fd, void *data, size_t size);
+int8_t block_write(const int fd, const void * const data, const size_t size);
 
 #endif

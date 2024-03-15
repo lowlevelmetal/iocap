@@ -12,7 +12,7 @@
 #include "blocking_io.h"
 
 // Block until write is complete
-int8_t block_write(int fd, void *data, size_t size) {
+int8_t block_write(const int fd, const void * const data, const size_t size) {
    uint_fast64_t total = 0;
 
    do {

@@ -7,6 +7,7 @@
 
 // Unix includes
 #include <signal.h>
+#include <unistd.h>
 
 // Standard includes
 #include <stdlib.h>
@@ -17,7 +18,9 @@
 #include "shared.h"
 #include "signal.h"
 #include "box.h"
+#include "blocking_io.h"
 
+#define ENTER_PROMPT "Input Here: "
 
 int main() {
    puts("Launching iocap");
@@ -45,17 +48,28 @@ int main() {
 
    coord2d top_left = {3,3};
    coord2d bottom_right = {48, 24};
+   coord2d text_offset = {3,2};
    box *hbox = alloc_box(top_left, bottom_right);
 
    hbox->draw(hbox);
+   hbox->draw_text(hbox, ENTER_PROMPT, text_offset);
 
    // Main loop
    while(atomic_load(&running)) {
-      
+      char c;
+      if(read(STDIN_FILENO, &c, 1) < 0) {
+         perror("Failed to read from stdin");
+         atomic_store(&running, 0);
+      }
+
+      if(block_write(STDOUT_FILENO, &c, 1) == -1) {
+         perror("Failed to write to stdout");
+         atomic_store(&running, 0);
+      }
    }
 
    free_box(hbox);
-
+   clear_term();
    reset_term(); 
 
    return EXIT_SUCCESS; 

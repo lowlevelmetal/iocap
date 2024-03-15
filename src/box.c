@@ -5,6 +5,9 @@
  * 03-15-2024
  */
 
+// Standard includes
+#include <string.h>
+
 // Unix includes
 #include <unistd.h>
 
@@ -59,6 +62,10 @@ static int8_t _draw(const box * const hbox) {
 static void _draw_text(const box * const hbox, const char * const text, const coord2d pos_offset) {
    if(!hbox || !text)
       return;
+
+   move_term_cursor(hbox->top_left.x + 1 + pos_offset.x, hbox->top_left.y + 1 + pos_offset.y);
+
+   block_write(STDOUT_FILENO, text, strlen(text));
 }
 
 // Globals
