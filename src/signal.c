@@ -19,8 +19,8 @@
 void sig_handler(int sig) {
    switch(sig) {
       case SIGINT:
-         puts("Sigint captured");
-         atomic_store(&running, 0);
+         puts("Sigint captured...");
+         atomic_store(&running, 0); // Set the running state to false so the program can exit gracefully
          break;
       default:
         exit(EXIT_SUCCESS);

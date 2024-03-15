@@ -16,6 +16,7 @@
 #include "term.h"
 #include "shared.h"
 #include "signal.h"
+#include "box.h"
 
 
 int main() {
@@ -37,10 +38,23 @@ int main() {
       return EXIT_FAILURE;
    }
 
+   if(clear_term() < 0) {
+      perror("Failed to clear terminal");
+      return EXIT_FAILURE;
+   }
+
+   coord2d top_left = {3,3};
+   coord2d bottom_right = {48, 24};
+   box *hbox = alloc_box(top_left, bottom_right);
+
+   hbox->draw(hbox);
+
    // Main loop
    while(atomic_load(&running)) {
-
+      
    }
+
+   free_box(hbox);
 
    reset_term(); 
 

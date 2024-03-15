@@ -5,11 +5,18 @@
  * 03-14-2024
  */
 
+// Standard includes
+#include <string.h>
+#include <stdio.h>
+
 // Unix includes
 #include <unistd.h>
 
 // Local includes
 #include "term.h"
+#include "blocking_io.h"
+
+#define CLS_CODE "\033[2J\033[1;1H"
 
 // PRIVATES
 static uint8_t initialized = 0;
@@ -55,5 +62,16 @@ int8_t set_term_mode(uint8_t mode) {
    }
 
    return 0;
+}
+
+int8_t clear_term() {
+   return block_write(STDOUT_FILENO, CLS_CODE, strlen(CLS_CODE));
+}
+
+int8_t move_term_cursor(uint16_t x, uint16_t y) {
+   char buf[16];
+   snprintf(buf, 16, "\033[%d;%dH", y, x);
+
+   return block_write(STDOUT_FILENO, buf, strlen(buf));
 }
 
